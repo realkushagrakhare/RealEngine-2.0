@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -121,12 +122,16 @@ public class MainGameLoop {
 
 		};
 		RawModel model = loader.loadToVAO(vertices,textureCoords,indices);*/
-		RawModel model = OBJLoader.loadObjModel("stall", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("image"));
-		TexturedModel texturedModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("stallTexture")));
+		RawModel model = OBJLoader.loadObjModel("dragon", loader);
+		//ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
+		TexturedModel texturedModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("white")));
+		ModelTexture texture = texturedModel.getTexture();
+		texture.setShineDamper(10);
+		texture.setReflectivity(1);
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
-		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,1);
+		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
+		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
 		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested())
@@ -136,6 +141,7 @@ public class MainGameLoop {
 			camera.move();
 			renderer.prepare();
 			shader.start();
+			shader.loadLight(light);
 			shader.loadViewMatrix(camera);
 			renderer.render(entity,shader);
 			shader.stop();

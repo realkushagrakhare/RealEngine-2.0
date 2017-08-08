@@ -3,6 +3,7 @@ package shaders;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
+import entities.Light;
 import toolbox.Maths;
 
 public class StaticShader extends ShaderProgram {
@@ -12,6 +13,10 @@ public class StaticShader extends ShaderProgram {
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
+	private int location_lightPosition;
+	private int location_lightColour;
+	private int location_shineDamper;
+	private int location_reflectivity;
 	
 	public StaticShader()
 	{
@@ -22,12 +27,23 @@ public class StaticShader extends ShaderProgram {
 	{
 		super.bindAttributes(0, "position");
 		super.bindAttributes(1,"textureCoords");
+		super.bindAttributes(2, "normal");
 	}
 	@Override
 	protected void getAllUniformLocations() {
 		this.location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		this.location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		this.location_viewMatrix = super.getUniformLocation("viewMatrix");
+		this.location_lightPosition = super.getUniformLocation("lightPosition");
+		this.location_lightColour = super.getUniformLocation("lightColour");
+		this.location_shineDamper = super.getUniformLocation("shineDamper");
+		this.location_reflectivity = super.getUniformLocation("reflectivity");
+	}
+	
+	public void loadShineVariables(float damper,float reflectivity)
+	{
+		super.loadFloat(location_shineDamper, damper);
+		super.loadFloat(location_reflectivity, reflectivity);
 	}
 
 	public void loadTransformMatrix(Matrix4f matrix)
@@ -44,5 +60,11 @@ public class StaticShader extends ShaderProgram {
 	{
 		Matrix4f matrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, matrix);
+	}
+	
+	public void loadLight(Light light)
+	{
+		super.loadVector(location_lightPosition, light.getPosition());
+		super.loadVector(location_lightColour, light.getColour());
 	}
 }
