@@ -27,12 +27,23 @@ import rederEngine.EntityRenderer;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 public class MainGameLoop {
 	public static void main(String args[])
 	{
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
+		
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkflowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture,
+				gTexture, bTexture);
 		/*float[] vertices = {
 							-0.5f, 0.5f, 0f,
 							-0.5f, -0.5f, 0f, 
@@ -138,6 +149,7 @@ public class MainGameLoop {
 		
 		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern", loader),
 				new ModelTexture(loader.loadTexture("fern")));
+		
 		fern.getTexture().setHasTransparency(true);
 		texture.setShineDamper(1);
 		texture.setReflectivity(0.5f);
@@ -158,8 +170,8 @@ public class MainGameLoop {
 		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
 		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(-1,-1,loader,new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap);
+		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap);
 		
 		Camera camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer();
