@@ -14,8 +14,10 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
+import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.ContextAttribs;
 
@@ -170,17 +172,25 @@ public class MainGameLoop {
 		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
 		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap);
-		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap);
+		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightMap");
+		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap,"heightMap");
 		
-		Camera camera = new Camera();
+		
 		MasterRenderer renderer = new MasterRenderer();
+		
+		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
+		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
+				loader.loadTexture("playerTexture")));
+		Player player = new Player(stanfordBunny, new Vector3f(100,0,-50),0,180,0,0.6f);
+		Camera camera = new Camera(player);
 		while(!Display.isCloseRequested())
 		{
 			//entity.increasePosition(0,0,0f);
 			entity.increaseRotation(0, 1, 0);
 			camera.move();
 			//camera.setYaw();
+			player.move();
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain2);
 			renderer.processTerrain(terrain);
 			for(int i=0;i<500;i++)
