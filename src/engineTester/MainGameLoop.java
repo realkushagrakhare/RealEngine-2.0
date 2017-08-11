@@ -9,12 +9,15 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.OBJFileLoader;
@@ -141,9 +144,9 @@ public class MainGameLoop {
 
 		};
 		RawModel model = loader.loadToVAO(vertices,textureCoords,indices);*/
-		RawModel model = OBJLoader.loadObjModel("tree", loader);
+		RawModel model = OBJLoader.loadObjModel("pine", loader);
 		//ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
-		TexturedModel texturedModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
+		TexturedModel texturedModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("pine")));
 		ModelTexture texture = texturedModel.getTexture();
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader),
 				new ModelTexture(loader.loadTexture("grassTexture")));
@@ -163,30 +166,52 @@ public class MainGameLoop {
 		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightMap");
 		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap,"heightMap");
 		Random random = new Random();
+		
+		//StaticShader shader = new StaticShader();
+		//Renderer renderer = new Renderer(shader);
+		
+		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
+		
+		Light sun = new Light(new Vector3f(0,100,-70),new Vector3f(10.4f,10.4f,10.4f));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(sun);
+		//lights.add(new Light(new Vector3f(185,12.5f,-293), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
+		//lights.add(new Light(new Vector3f(370,11,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
+		//lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
+		
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader),new ModelTexture(loader.loadTexture("lamp")));
+		lamp.getTexture().setUseFakeLighting(true);
+		entities.add(new Entity(lamp, new Vector3f(185,-4.7f,-293),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(370,-1.2f,-300),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(293,-3.8f,-305),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(0,0,0),0,0,0,1));
+		
 		for(int i=0;i<500;i++)
 		{
 			float x1 = random.nextFloat()*800-400, x2 = random.nextFloat()*800-400, x3 = random.nextFloat()*800-400;
 			float z1 = random.nextFloat()*800-400, z2 = random.nextFloat()*800-400, z3 = random.nextFloat()*800-400;
 			float y1 = terrain.getHeightOfTerrain(x1,z1), y2 = terrain.getHeightOfTerrain(x2,z2), y3 = terrain.getHeightOfTerrain(x3,z3);
 			entities.add(new Entity(texturedModel,new Vector3f(x1,y1,z1),
-					0,0,0,3));
+					0,0,0,1));
 			entities.add(new Entity(grass,new Vector3f(x2,y2,z2),
 					0,0,0,1));
 			entities.add(new Entity(fern,random.nextInt(4),new Vector3f(x3,y3,z3),
 					0,0,0,0.6f));
 		}
-		//StaticShader shader = new StaticShader();
-		//Renderer renderer = new Renderer(shader);
-		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
-		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
 				loader.loadTexture("playerTexture")));
-		Player player = new Player(stanfordBunny, new Vector3f(100,0,-50),0,180,0,0.6f);
+		Player player = new Player(stanfordBunny, new Vector3f(185,10,-295),0,180,0,0.6f);
 		Camera camera = new Camera(player);
+		
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		guis.add(gui);
+		
+		//GuiRenderer guiRenderer = new GuiRenderer(loader);
 		while(!Display.isCloseRequested())
 		{
 			//entity.increasePosition(0,0,0f);
@@ -205,10 +230,12 @@ public class MainGameLoop {
 			//shader.loadViewMatrix(camera);
 			//renderer.render(entity,shader);
 			//shader.stop();
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
+			//guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		//shader.cleanUp();
+		//guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
