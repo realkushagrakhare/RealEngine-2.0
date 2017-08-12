@@ -172,12 +172,12 @@ public class MainGameLoop {
 		
 		Entity entity = new Entity(texturedModel,new Vector3f(0,0,-50),0,0,0,2);
 		
-		Light sun = new Light(new Vector3f(0,100,-70),new Vector3f(10.4f,10.4f,10.4f));
+		Light sun = new Light(new Vector3f(0,100,-70),new Vector3f(0.4f,0.4f,0.4f));
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(sun);
-		//lights.add(new Light(new Vector3f(185,12.5f,-293), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
-		//lights.add(new Light(new Vector3f(370,11,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
-		//lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(185,6.5f,-293), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.001f)));
+		lights.add(new Light(new Vector3f(370,11,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.001f)));
+		lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.001f)));
 		
 		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader),new ModelTexture(loader.loadTexture("lamp")));
 		lamp.getTexture().setUseFakeLighting(true);
@@ -199,7 +199,7 @@ public class MainGameLoop {
 					0,0,0,0.6f));
 		}
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
