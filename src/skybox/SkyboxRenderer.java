@@ -8,8 +8,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
 import models.RawModel;
-import rederEngine.DisplayManager;
-import rederEngine.Loader;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
 
 public class SkyboxRenderer {
 	private static final float SIZE = 500f;

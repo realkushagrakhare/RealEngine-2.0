@@ -26,11 +26,11 @@ import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.ContextAttribs;
 
-import rederEngine.DisplayManager;
-import rederEngine.Loader;
-import rederEngine.MasterRenderer;
-import rederEngine.OBJLoader;
-import rederEngine.EntityRenderer;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import renderEngine.OBJLoader;
+import renderEngine.EntityRenderer;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;

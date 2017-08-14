@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
-import rederEngine.DisplayManager;
+import renderEngine.DisplayManager;
 import terrains.Terrain;
 
 public class Player extends Entity{

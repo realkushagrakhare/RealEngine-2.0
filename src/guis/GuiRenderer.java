@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import models.RawModel;
-import rederEngine.Loader;
+import renderEngine.Loader;
 import toolbox.Maths;
 
 public class GuiRenderer {

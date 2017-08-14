@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
-import rederEngine.DisplayManager;
+import renderEngine.DisplayManager;
 import shaders.ShaderProgram;
 import toolbox.Maths;
 
