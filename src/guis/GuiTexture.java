@@ -7,7 +7,7 @@ public class GuiTexture {
 	private Vector2f scale;
 	private Vector2f position;
 	
-	public GuiTexture(int texture, Vector2f scale, Vector2f position) {
+	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
 		super();
 		this.texture = texture;
 		this.scale = scale;
