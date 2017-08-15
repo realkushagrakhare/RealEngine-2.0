@@ -133,16 +133,16 @@ public class MainGameLoop {
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
 		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,renderer.getProjectionMatrix());
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,renderer.getProjectionMatrix(),fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		WaterTile water =new WaterTile(75,-75,0);
 		waters.add(water);
 		
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(),new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		/*GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(),new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
 		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(),new Vector2f(-0.5f,0.5f), new Vector2f(0.25f,0.25f));
 		guiTextures.add(refraction);
-		guiTextures.add(reflection);
+		guiTextures.add(reflection);*/
 		
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
