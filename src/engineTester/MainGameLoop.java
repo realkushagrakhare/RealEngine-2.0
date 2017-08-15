@@ -8,8 +8,11 @@ import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -19,6 +22,10 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import water.WaterFrameBuffers;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -43,7 +50,7 @@ public class MainGameLoop {
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture,
 				gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-
+		
 		// *****************************************
 
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader),
@@ -73,7 +80,9 @@ public class MainGameLoop {
 		fern.getTexture().setHasTransparency(true);
 
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
-
+		List<Terrain> terrains = new ArrayList<Terrain>();
+		terrains.add(terrain);
+		
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random(676452);
 		for (int i = 0; i < 400; i++) {
@@ -118,25 +127,54 @@ public class MainGameLoop {
 
 		Player player = new Player(stanfordBunny, new Vector3f(100, 5, -150), 0, 180, 0, 0.6f);
 		Camera camera = new Camera(player);
+		entities.add(player);
 		
 		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"),new Vector2f(-0.8f,0.9f), new Vector2f(0.2f,0.3f));
-		//guiTextures.add(gui);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,renderer.getProjectionMatrix());
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		WaterTile water =new WaterTile(75,-75,0);
+		waters.add(water);
+		
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(),new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(),new Vector2f(-0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		guiTextures.add(refraction);
+		guiTextures.add(reflection);
+		
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
-			renderer.processEntity(player);
-			renderer.processTerrain(terrain);
-			for (Entity entity : entities) {
-				renderer.processEntity(entity);
-			}
-			renderer.render(lights, camera);
+			
+			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+			
+			//reflection
+			fbos.bindReflectionFrameBuffer();
+			float distance = 2 * (camera.getPosition().y-water.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()));
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+			
+			//refraction
+			fbos.bindRefractionFrameBuffer();
+			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,-1,0,water.getHeight()));
+			
+			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+			fbos.unbindCurrentFrameBuffer();
+			
+			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,-1,0,1000));
+			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures);
+			
 			DisplayManager.updateDisplay();
 		}
 
+		fbos.cleanUp();
+		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

@@ -5,7 +5,6 @@ import java.util.List;
 import models.RawModel;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -21,13 +20,10 @@ public class WaterRenderer {
 
 	private RawModel quad;
 	private WaterShader shader;
-	private WaterFrameBuffers fbos;
 
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix,WaterFrameBuffers fbos) {
-		this.fbos = fbos;
+	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
-		shader.connectTextures();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		setUpVAO(loader);
@@ -48,12 +44,8 @@ public class WaterRenderer {
 	private void prepareRender(Camera camera){
 		shader.start();
 		shader.loadViewMatrix(camera);
-		GL30.glBindVertexArray(quad.getVaoId());
+		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
 	}
 	
 	private void unbind(){
@@ -63,7 +55,7 @@ public class WaterRenderer {
 	}
 
 	private void setUpVAO(Loader loader) {
-		// Just x and z vertex positions here, y is set to 0 in v.shader
+		// Just x and z vectex positions here, y is set to 0 in v.shader
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
 		quad = loader.loadToVAO(vertices, 2);
 	}

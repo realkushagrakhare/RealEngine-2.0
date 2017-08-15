@@ -28,8 +28,14 @@ public class Camera {
 		float verticalDistance = calculateVerticalDistance();
 		calculateCameraPosition(horizontalDistance, verticalDistance);
 		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+		yaw%=360;
 	}
-
+	
+	public void invertPitch()
+	{
+		this.pitch = -pitch;
+	}
+	
 	public Vector3f getPosition() {
 		return position;
 	}
