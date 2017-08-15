@@ -1,19 +1,23 @@
 package models;
 
 public class RawModel {
-	private int vaoId;
+	
+	private int vaoID;
 	private int vertexCount;
-	public RawModel(int vaoId, int vertexCount)
-	{
-		this.vaoId = vaoId;
-		this.vertexCount =vertexCount;
+	
+	public RawModel(int vaoID, int vertexCount){
+		this.vaoID = vaoID;
+		this.vertexCount = vertexCount;
 	}
-	public int getVaoId()
-	{
-		return vaoId;
+
+	public int getVaoID() {
+		return vaoID;
 	}
-	public int getVertexCount()
-	{
+
+	public int getVertexCount() {
 		return vertexCount;
 	}
+	
+	
+
 }
