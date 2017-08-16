@@ -20,7 +20,7 @@ import entities.Light;
 public class WaterRenderer {
 
 	private static final String DUDV_MAP="waterDUDV";
-	private static final String NORMAL_MAP="normalMap";
+	private static final String NORMAL_MAP="normal";
 	private static final float WAVE_SPEED = 0.03f;			
 	
 	private RawModel quad;
@@ -74,9 +74,15 @@ public class WaterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
+		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture());
+	
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	private void unbind(){
+		GL11.glDisable(GL11.GL_BLEND);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stop();

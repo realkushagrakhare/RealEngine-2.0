@@ -155,7 +155,7 @@ public class MainGameLoop {
 			float distance = 2 * (camera.getPosition().y-water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()));
+			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()+0f));
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
