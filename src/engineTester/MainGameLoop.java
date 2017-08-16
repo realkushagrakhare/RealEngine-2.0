@@ -6,6 +6,7 @@ import java.util.Random;
 
 import models.RawModel;
 import models.TexturedModel;
+import normalMappingObjConverter.NormalMappedObjLoader;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -84,6 +85,16 @@ public class MainGameLoop {
 		terrains.add(terrain);
 		
 		List<Entity> entities = new ArrayList<Entity>();
+		List<Entity> normalMapEntities = new ArrayList<Entity>();
+		
+		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("boulder", loader),
+				new ModelTexture(loader.loadTexture("boulder")));
+		barrelModel.getTexture().setNormalMap(loader.loadTexture("boulderNormal"));
+		barrelModel.getTexture().setShineDamper(10);
+		barrelModel.getTexture().setReflectivity(0.5f);
+		
+		normalMapEntities.add(new Entity(barrelModel, new Vector3f(75,10,-75),0,0,0,1f));
+		
 		Random random = new Random(676452);
 		for (int i = 0; i < 400; i++) {
 			if (i % 3 == 0) {
@@ -155,18 +166,18 @@ public class MainGameLoop {
 			float distance = 2 * (camera.getPosition().y-water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()+0f));
+			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()+0f));
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
 			//refraction
 			fbos.bindRefractionFrameBuffer();
-			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,-1,0,water.getHeight()));
+			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,-1,0,water.getHeight()));
 			
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			fbos.unbindCurrentFrameBuffer();
 			
-			renderer.renderScene(entities,terrains,lights,camera, new Vector4f(0,-1,0,1000));
+			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,-1,0,1000));
 			waterRenderer.render(waters, camera, light);
 			guiRenderer.render(guiTextures);
 			
