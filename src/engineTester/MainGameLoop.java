@@ -1,5 +1,6 @@
 package engineTester;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,6 +32,9 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 
@@ -40,7 +44,12 @@ public class MainGameLoop {
 
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
+		TextMaster.init(loader);
 
+		FontType font = new FontType(loader.loadTextureAtlas("candara"), new File("res/candara.fnt"));
+		GUIText text = new GUIText("This is a test text", 3, font, new Vector2f(0.0f,0.4f), 1.0f, true);
+		text.setColour(0.1f, 0.1f, 0.1f);
+		
 		// *********TERRAIN TEXTURE STUFF**********
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
@@ -180,10 +189,12 @@ public class MainGameLoop {
 			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,-1,0,1000));
 			waterRenderer.render(waters, camera, light);
 			guiRenderer.render(guiTextures);
+			TextMaster.render();
 			
 			DisplayManager.updateDisplay();
 		}
 
+		TextMaster.cleanUp();
 		fbos.cleanUp();
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
