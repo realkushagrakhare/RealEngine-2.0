@@ -177,7 +177,7 @@ public class MainGameLoop {
 		guiTextures.add(refraction);
 		guiTextures.add(reflection);*/
 		
-		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4);
 		
 		ParticleSystem system = new ParticleSystem(particleTexture, 50, 25, 0.3f, 4, 1);
 		system.randomizeRotation();
@@ -191,7 +191,7 @@ public class MainGameLoop {
 			camera.move();
 			
 			system.generateParticles(player.getPosition());
-			ParticleMaster.update();
+			ParticleMaster.update(camera);
 			
 			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 			
@@ -233,6 +233,18 @@ public class MainGameLoop {
 
 	}
 
+	
+	
+
+	// Main 2
+	
+	
+	
+	
+	
+	
+	
+	
 	public static void main2() {
 		 
         DisplayManager.createDisplay();
