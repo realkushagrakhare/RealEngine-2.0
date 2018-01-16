@@ -11,6 +11,7 @@ import normalMappingObjConverter.NormalMappedObjLoader;
 import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
+import particles.ParticleTexture;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -176,7 +177,9 @@ public class MainGameLoop {
 		guiTextures.add(refraction);
 		guiTextures.add(reflection);*/
 		
-		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
+		
+		ParticleSystem system = new ParticleSystem(particleTexture, 50, 25, 0.3f, 4, 1);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		system.setLifeError(0.1f);
