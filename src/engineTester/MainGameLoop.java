@@ -104,7 +104,8 @@ public class MainGameLoop {
 		flower.getTexture().setUseFakeLighting(true);
 		fern.getTexture().setHasTransparency(true);
 
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+		//Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, 256);
 		List<Terrain> terrains = new ArrayList<Terrain>();
 		terrains.add(terrain);
 		
@@ -141,6 +142,8 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
 		List<Light> lights = new ArrayList<Light>();
 		//lights.add(light);
+		Light sun = new Light(new Vector3f(0000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
+        lights.add(sun);
 		lights.add(new Light(new Vector3f(185,10,-293), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
 		lights.add(new Light(new Vector3f(370,17,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
 		lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
@@ -201,12 +204,14 @@ public class MainGameLoop {
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
 			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,1,0,-water.getHeight()+0f));
+			ParticleMaster.renderParticles(camera);
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
 			//refraction
 			fbos.bindRefractionFrameBuffer();
 			renderer.renderScene(entities,normalMapEntities,terrains,lights,camera, new Vector4f(0,-1,0,water.getHeight()));
+			//ParticleMaster.renderParticles(camera);
 			
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			fbos.unbindCurrentFrameBuffer();
@@ -283,7 +288,7 @@ public class MainGameLoop {
  
         fern.getTexture().setHasTransparency(true);
  
-        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "customHeightMap");
         List<Terrain> terrains = new ArrayList<Terrain>();
         terrains.add(terrain);
  
@@ -380,7 +385,7 @@ public class MainGameLoop {
         WaterTile water = new WaterTile(75, -75, 0);
         for(int i = 1; i < 5; i++){
         	for(int j = 1; j < 5; j++){
-        		waters.add(new WaterTile(i * 150, -j * 160, 0));
+        		waters.add(new WaterTile(i * 150, -j * 150, -20));
         	}
         }
         //waters.add(water);

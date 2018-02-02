@@ -1,8 +1,10 @@
-/fontMeshCreator/
 /fontRendering/
+/guis/
+/models/
 /normalMappingObjConverter/
 /normalMappingRenderer/
 /objConverter/
+/particles/
 /renderEngine/
 /shaders/
 /skybox/
@@ -11,5 +13,4 @@
 /toolbox/
 /water/
 /engineTester/
-/particles/
-/entities/
+/shadows/
