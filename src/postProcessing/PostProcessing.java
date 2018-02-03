@@ -17,25 +17,19 @@ public class PostProcessing {
 	private static ContrastChanger contrastChanger;
 	private static HorizontalBlur hBlur;
 	private static VerticalBlur vBlur;
-	private static HorizontalBlur hBlur2;
-	private static VerticalBlur vBlur2;
 
 	public static void init(Loader loader){
 		quad = loader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
 		hBlur = new HorizontalBlur(Display.getWidth()/8, Display.getHeight()/8);
 		vBlur = new VerticalBlur(Display.getWidth()/8, Display.getHeight()/8);
-		hBlur2 = new HorizontalBlur(Display.getWidth()/2, Display.getHeight()/2);
-		vBlur2 = new VerticalBlur(Display.getWidth()/2, Display.getHeight()/2);
 	}
 	
 	public static void doPostProcessing(int colourTexture){
 		start();
-		hBlur2.render(colourTexture);
-		vBlur2.render(hBlur2.getOutputTexture());
-		hBlur.render(vBlur2.getOutputTexture());
-		vBlur.render(hBlur.getOutputTexture());
-		contrastChanger.render(vBlur.getOutputTexture());
+		//hBlur.render(colourTexture);
+		//vBlur.render(hBlur.getOutputTexture());
+		contrastChanger.render(colourTexture);
 		end();
 	}
 	
@@ -43,8 +37,6 @@ public class PostProcessing {
 		contrastChanger.cleanUp();
 		hBlur.cleanUp();
 		vBlur.cleanUp();
-		hBlur2.cleanUp();
-		vBlur2.cleanUp();
 	}
 	
 	private static void start(){
