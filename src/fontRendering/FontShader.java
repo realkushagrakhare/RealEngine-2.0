@@ -7,8 +7,8 @@ import shaders.ShaderProgram;
 
 public class FontShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE = "src/fontRendering/fontVertex.txt";
-	private static final String FRAGMENT_FILE = "src/fontRendering/fontFragment.txt";
+	private static final String VERTEX_FILE = "/fontRendering/fontVertex.txt";
+	private static final String FRAGMENT_FILE = "/fontRendering/fontFragment.txt";
 	
 	private int location_colour;
 	private int location_translation;
