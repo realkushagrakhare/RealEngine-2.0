@@ -19,7 +19,7 @@ public class ModelTexture {
 		this.textureID = texture;
 	}
 	
-	public void setSpecularMap(int specMap){
+	public void setExtraInfoMap(int specMap){
 		this.specularMap = specMap;
 		this.hasSpecularMap = true;
 	}

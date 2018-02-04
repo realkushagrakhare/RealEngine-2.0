@@ -31,6 +31,8 @@ public class NormalMappingShader extends ShaderProgram{
 	private int location_plane;
 	private int location_modelTexture;
 	private int location_normalMap;
+	private int location_specularMap;
+	private int location_usesSpecularMap;
 
 	public NormalMappingShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -46,6 +48,8 @@ public class NormalMappingShader extends ShaderProgram{
 
 	@Override
 	protected void getAllUniformLocations() {
+		location_specularMap = super.getUniformLocation("specularMap");
+		location_usesSpecularMap = super.getUniformLocation("usesSpecularMap");
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
@@ -71,6 +75,11 @@ public class NormalMappingShader extends ShaderProgram{
 	protected void connectTextureUnits(){
 		super.loadInt(location_modelTexture, 0);
 		super.loadInt(location_normalMap, 1);
+		super.loadInt(location_specularMap, 2);
+	}
+	
+	protected void loadUseSpecularMap(boolean useMap){
+		super.loadBoolean(location_usesSpecularMap, useMap);
 	}
 	
 	protected void loadClipPlane(Vector4f plane){

@@ -137,7 +137,7 @@ public class MainGameLoop {
 		cherryModel.getTexture().setHasTransparency(true);
 		cherryModel.getTexture().setShineDamper(10);
 		cherryModel.getTexture().setReflectivity(0.5f);
-		cherryModel.getTexture().setSpecularMap(loader.loadTexture("cherryS"));
+		cherryModel.getTexture().setExtraInfoMap(loader.loadTexture("cherryS"));
 		
 		Random random = new Random(676452);
 		for (int i = 0; i < 400; i++) {
@@ -161,7 +161,7 @@ public class MainGameLoop {
 				float z = random.nextFloat() * -600;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(cherryModel,random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360,
-						0, random.nextFloat() * 0.3f + 0.9f));
+						0, random.nextFloat() * 1.8f + 2.0f));
 			}
 		}
 
@@ -177,7 +177,7 @@ public class MainGameLoop {
 		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lantern"));
 		lampTexture.setUseFakeLighting(true);
 		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lantern", loader),lampTexture);
-		lampTexture.setSpecularMap(loader.loadTexture("lanternS"));
+		lampTexture.setExtraInfoMap(loader.loadTexture("lanternS"));
 		entities.add(new Entity(lamp, new Vector3f(185,-4.7f,-293),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(370,+4.2f,-300),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(293,-6.8f,-305),0,0,0,1));
