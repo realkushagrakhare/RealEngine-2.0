@@ -31,6 +31,9 @@ public class StaticShader extends ShaderProgram{
 	private int location_numberOfRows;
 	private int location_offset;
 	private int location_plane;
+	private int location_specularMap;
+	private int location_usesSpecularMap;
+	private int location_modelTexture;
 
 	public StaticShader() 
 	{
@@ -48,6 +51,9 @@ public class StaticShader extends ShaderProgram{
 	@Override
 	protected void getAllUniformLocations() 
 	{
+		location_specularMap = super.getUniformLocation("specularMap");
+		location_usesSpecularMap = super.getUniformLocation("usesSpecularMap");
+		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
@@ -67,6 +73,16 @@ public class StaticShader extends ShaderProgram{
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+	
+	public void connectTextureUnits(){
+		super.loadInt(location_modelTexture, 0);
+		super.loadInt(location_specularMap, 1);
+		//super.loadInt(location_shadowMap, 5);
+	}
+	
+	public void loadUseSpecularMap(boolean useMap){
+		super.loadBoolean(location_usesSpecularMap, useMap);
 	}
 	
 	public void loadClipPlane(Vector4f plane)

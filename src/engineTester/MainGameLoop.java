@@ -8,6 +8,7 @@ import java.util.Random;
 import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
+import objConverter.OBJFileLoader;
 import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
@@ -131,6 +132,13 @@ public class MainGameLoop {
 		
 		normalMapEntities.add(new Entity(barrelModel, new Vector3f(75,10,-75),0,0,0,1f));
 		
+		TexturedModel cherryModel = new TexturedModel(OBJLoader.loadObjModel("cherry", loader),
+				new ModelTexture(loader.loadTexture("cherry")));
+		cherryModel.getTexture().setHasTransparency(true);
+		cherryModel.getTexture().setShineDamper(10);
+		cherryModel.getTexture().setReflectivity(0.5f);
+		cherryModel.getTexture().setSpecularMap(loader.loadTexture("cherryS"));
+		
 		Random random = new Random(676452);
 		for (int i = 0; i < 400; i++) {
 			if (i % 3 == 0) {
@@ -148,6 +156,13 @@ public class MainGameLoop {
 				entities.add(new Entity(bobble,random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360,
 						0, random.nextFloat() * 0.1f + 0.6f));
 			}
+			if (i % 5 == 0) {
+				float x = random.nextFloat() * 800;
+				float z = random.nextFloat() * -600;
+				float y = terrain.getHeightOfTerrain(x, z);
+				entities.add(new Entity(cherryModel,random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360,
+						0, random.nextFloat() * 0.3f + 0.9f));
+			}
 		}
 
 		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
@@ -159,9 +174,10 @@ public class MainGameLoop {
 		lights.add(new Light(new Vector3f(370,17,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
 		lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
 		
-		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
+		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lantern"));
 		lampTexture.setUseFakeLighting(true);
-		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader),lampTexture);
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lantern", loader),lampTexture);
+		lampTexture.setSpecularMap(loader.loadTexture("lanternS"));
 		entities.add(new Entity(lamp, new Vector3f(185,-4.7f,-293),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(370,+4.2f,-300),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(293,-6.8f,-305),0,0,0,1));
