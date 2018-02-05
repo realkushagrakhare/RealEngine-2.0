@@ -31,10 +31,10 @@ public class PostProcessing {
 		combineFilter = new CombineFilter();
 	}
 	
-	public static void doPostProcessing(int colourTexture){
+	public static void doPostProcessing(int colourTexture, int brightTexture){
 		start();
-		brightFilter.render(colourTexture);
-		hBlur.render(brightFilter.getOutputTexture());
+		//brightFilter.render(colourTexture);
+		hBlur.render(brightTexture);
 		vBlur.render(hBlur.getOutputTexture());
 		combineFilter.render(colourTexture, vBlur.getOutputTexture());
 		end();

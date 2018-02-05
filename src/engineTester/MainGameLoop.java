@@ -217,6 +217,7 @@ public class MainGameLoop {
 		
 		Fbo multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight()); 
 		Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE); 
+		Fbo outputFbo2 = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE); 
 		PostProcessing.init(loader);
 		
 		while (!Display.isCloseRequested()) {
@@ -256,8 +257,9 @@ public class MainGameLoop {
 			ParticleMaster.renderParticles(camera);
 			multisampleFbo.unbindFrameBuffer();
 			//multisampleFbo.resolveToScreen();
-			multisampleFbo.resolveToFbo(outputFbo);
-			PostProcessing.doPostProcessing(outputFbo.getColourTexture());
+			multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+			multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo2);
+			PostProcessing.doPostProcessing(outputFbo.getColourTexture(), outputFbo2.getColourTexture());
 			
 			guiRenderer.render(guiTextures);
 			//TextMaster.render();
@@ -267,6 +269,7 @@ public class MainGameLoop {
 		
 		PostProcessing.cleanUp();
 		outputFbo.cleanUp();
+		outputFbo2.cleanUp();
 		multisampleFbo.cleanUp();
 		ParticleMaster.cleanUp();
 		TextMaster.cleanUp();
