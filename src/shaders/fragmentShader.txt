@@ -5,11 +5,13 @@ in vec3 surfaceNormal;
 in vec3 toLightVector[4];
 in vec3 toCameraVector;
 in float visibility;
+in vec4 shadowCoords;
 
 out vec4 out_Color;
 
 uniform sampler2D modelTexture;
 uniform sampler2D specularMap;
+uniform sampler2D shadowMap;
 uniform float usesSpecularMap;
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
@@ -19,7 +21,12 @@ uniform vec3 skyColour;
 
 void main(void)
 {
-
+	float objectNearestLight = texture(shadowMap, shadowCoords.xy).r;
+	float lightFactor = 1.0;
+	if(shadowCoords.z > objectNearestLight + 0.05){
+		lightFactor = 1.0  - 0.4;
+	}
+	
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitVectorToCamera = normalize(toCameraVector);
 	
@@ -41,13 +48,14 @@ void main(void)
 		totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
 		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColour[i])/attFactor;
 	}
-	totalDiffuse = max(totalDiffuse, 0.2);
-	
+	totalDiffuse = max(totalDiffuse, 0.4);
 	vec4 textureColour = texture(modelTexture,pass_textureCoordinates);
 	if(textureColour.a<0.5)
 	{
 		discard;
 	}
+	
+	totalDiffuse = totalDiffuse * lightFactor;
 	
 	if(usesSpecularMap > 0.5){
 		vec4 mapInfo = texture(specularMap, pass_textureCoordinates);

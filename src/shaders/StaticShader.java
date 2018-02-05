@@ -34,6 +34,8 @@ public class StaticShader extends ShaderProgram{
 	private int location_specularMap;
 	private int location_usesSpecularMap;
 	private int location_modelTexture;
+	private int location_toShadowMapSpace;
+	private int location_shadowMap;
 
 	public StaticShader() 
 	{
@@ -64,6 +66,8 @@ public class StaticShader extends ShaderProgram{
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
+		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+		location_shadowMap = super.getUniformLocation("shadowMap");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -78,7 +82,11 @@ public class StaticShader extends ShaderProgram{
 	public void connectTextureUnits(){
 		super.loadInt(location_modelTexture, 0);
 		super.loadInt(location_specularMap, 1);
-		//super.loadInt(location_shadowMap, 5);
+		super.loadInt(location_shadowMap, 5);
+	}
+	
+	public void loadToShadowSpaceMatrix(Matrix4f matrix){
+		super.loadMatrix(location_toShadowMapSpace, matrix);
 	}
 	
 	public void loadUseSpecularMap(boolean useMap){
