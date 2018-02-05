@@ -154,9 +154,9 @@ public class MainGameLoop {
 				float z = random.nextFloat() * -600;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(bobble,random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360,
-						0, random.nextFloat() * 0.1f + 0.6f));
+						0, random.nextFloat() * 1.0f + 0.6f));
 			}
-			if (i % 5 == 0) {
+			if (i % 9 == 0) {
 				float x = random.nextFloat() * 800;
 				float z = random.nextFloat() * -600;
 				float y = terrain.getHeightOfTerrain(x, z);
@@ -170,17 +170,20 @@ public class MainGameLoop {
 		//lights.add(light);
 		Light sun = new Light(new Vector3f(00000000, 10000000, -10000000), new Vector3f(1.0f, 1.0f, 1.0f));
         lights.add(sun);
-		lights.add(new Light(new Vector3f(185,10,-293), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
-		lights.add(new Light(new Vector3f(370,17,-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
-		lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(185,terrain.getHeightOfTerrain(185, -293) + 30,-293), new Vector3f(4,0,0), 
+				new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(370, terrain.getHeightOfTerrain(370, -300) + 30,-300), new Vector3f(0,2,2), 
+				new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(293, terrain.getHeightOfTerrain(293, -305) + 30,-305), new Vector3f(2,2,0),
+				new Vector3f(1,0.01f,0.002f)));
 		
 		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lantern"));
 		lampTexture.setUseFakeLighting(true);
 		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lantern", loader),lampTexture);
 		lampTexture.setExtraInfoMap(loader.loadTexture("lanternS"));
-		entities.add(new Entity(lamp, new Vector3f(185,-4.7f,-293),0,0,0,1));
-		entities.add(new Entity(lamp, new Vector3f(370,+4.2f,-300),0,0,0,1));
-		entities.add(new Entity(lamp, new Vector3f(293,-6.8f,-305),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(185,terrain.getHeightOfTerrain(185, -293),-293),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(370,terrain.getHeightOfTerrain(370, -300),-300),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(293, terrain.getHeightOfTerrain(293, -305),-305),0,0,0,1));
 		//entities.add(new Entity(lamp, new Vector3f(185,-4.7f,-293),0,0,0,1));
 		
 		
@@ -220,7 +223,7 @@ public class MainGameLoop {
 			player.move(terrain);
 			camera.move();
 			
-			system.generateParticles(player.getPosition());
+			//system.generateParticles(player.getPosition());
 			ParticleMaster.update(camera);
 			
 			renderer.renderShadowMap(entities, sun);
@@ -252,12 +255,12 @@ public class MainGameLoop {
 			
 			ParticleMaster.renderParticles(camera);
 			multisampleFbo.unbindFrameBuffer();
-			multisampleFbo.resolveToScreen();
-			//multisampleFbo.resolveToFbo(outputFbo);
-			//PostProcessing.doPostProcessing(outputFbo.getColourTexture());
+			//multisampleFbo.resolveToScreen();
+			multisampleFbo.resolveToFbo(outputFbo);
+			PostProcessing.doPostProcessing(outputFbo.getColourTexture());
 			
 			guiRenderer.render(guiTextures);
-			TextMaster.render();
+			//TextMaster.render();
 			
 			DisplayManager.updateDisplay();
 		}
